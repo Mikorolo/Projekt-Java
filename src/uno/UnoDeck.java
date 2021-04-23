@@ -6,6 +6,7 @@ import java.util.List;
 
 public class UnoDeck {
     private UnoCard[] Deck;
+    public int top = -1;
 
     public UnoDeck()
     {
@@ -43,5 +44,16 @@ public class UnoDeck {
                 this.Deck[numOfCards++] = new UnoCard(UnoCard.Color.getColor(4), values[i]);
             }
         }
+    }
+
+    public UnoCard drawCard() {
+        top++;
+        if (top > Deck.length) {
+            List<UnoCard> buff = Arrays.asList(this.Deck);
+            Collections.shuffle(buff);
+            buff.toArray(this.Deck);
+            this.top = 0;
+        }
+        return Deck[top];
     }
 }
