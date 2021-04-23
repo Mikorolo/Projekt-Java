@@ -1,4 +1,6 @@
 package uno;
 
-public class UnoMain {
+public class UnoMain
+{
+
 }

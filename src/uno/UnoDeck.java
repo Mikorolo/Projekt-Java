@@ -1,24 +1,47 @@
 package uno;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.List;
+
 
 public class UnoDeck {
-    private HashMap<UnoCard.Color, UnoCard.Value> deck;
-    private int numOfCards;
+    private UnoCard[] Deck;
 
-    public UnoDeck() {
-        deck = new HashMap<UnoCard.Color, UnoCard.Value>();
+    public UnoDeck()
+    {
+        this.Deck = new UnoCard[108];
+        fillDeck();
+        List<UnoCard> buff = Arrays.asList(this.Deck);
+        Collections.shuffle(buff);
+        buff.toArray(this.Deck);
     }
 
     public void fillDeck() {
         UnoCard newCard;
         UnoCard.Value[] values = UnoCard.Value.values();
-        numOfCards = 0;
+        UnoCard.Color[] colors = UnoCard.Color.values();
+        int numOfCards = 0;
 
-        for (int i = 1 ; i < values.length - 5 ; i++) {
-            UnoCard.Value value = values[i];
-            deck.put(UnoCard.Color.Blue, value);
+        for (int i = 1 ; i < values.length-2 ; i++)
+        {
+            for(int j = 0; j < colors.length-1; j++)
+            {
+                this.Deck[numOfCards++] = new UnoCard(colors[j], values[i]);
+                this.Deck[numOfCards++] = new UnoCard(colors[j], values[i]);
+            }
+        }
+
+        for(int i = 0;i < colors.length-1;i++)
+        {
+            this.Deck[numOfCards++] = new UnoCard(colors[i],UnoCard.Value.getValue(0));
+        }
+
+        for(int i = 13; i < values.length; i++)
+        {
+            for (int j = 0; j<4; j++)
+            {
+                this.Deck[numOfCards++] = new UnoCard(UnoCard.Color.getColor(4), values[i]);
+            }
         }
     }
 }

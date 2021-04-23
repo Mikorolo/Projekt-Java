@@ -1,4 +1,6 @@
 package uno;
 
-public class UnoClient {
+public class UnoClient
+{
+    int MyID;
 }
