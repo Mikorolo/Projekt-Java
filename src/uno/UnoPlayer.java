@@ -7,4 +7,18 @@ public class UnoPlayer {
     public void giveCard(UnoCard card) {
         playerHand.add(card);
     };
+
+    public boolean removeCard(){return true;}
+
+    public int searchCard(UnoCard searched)
+    {
+        for(int i=0;i<playerHand.size();i++)
+        {
+            if(searched == playerHand.get(i))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

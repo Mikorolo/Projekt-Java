@@ -1,5 +1,7 @@
 package uno;
 
+import java.util.Objects;
+
 public class UnoCard {
     enum Color {
         Blue, Green, Red, Yellow, Special;
@@ -18,12 +20,25 @@ public class UnoCard {
         }
     }
 
-    private final Color color;
+    private Color color;
     private final Value value;
 
     public UnoCard (final Color color, final Value value) {
         this.color = color;
         this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UnoCard unoCard = (UnoCard) o;
+        return color == unoCard.color && value == unoCard.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, value);
     }
 
     public Color getColor() {
@@ -33,5 +48,12 @@ public class UnoCard {
     public Value getValue() {
         return this.value;
     }
+
+    public void changeColor(UnoCard.Color a)
+    {
+        this.color = a;
+    }
+
+    public  void  handleSpecial(){}
 
 }
