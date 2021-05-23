@@ -8,7 +8,30 @@ public class UnoPlayer {
         playerHand.add(card);
     };
 
-    public boolean removeCard(){return true;}
+    public boolean removeCard(UnoCard toRM)
+    {
+        if(playerHand.remove(toRM))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public boolean removeCard(int toRM)
+    {
+        try
+        {
+            playerHand.remove(toRM);
+            return true;
+        }
+        catch (IndexOutOfBoundsException x)
+        {
+            return false;
+        }
+        }
 
     public int searchCard(UnoCard searched)
     {
@@ -20,5 +43,16 @@ public class UnoPlayer {
             }
         }
         return -1;
+    }
+
+    public boolean cardExists(UnoCard card)
+    {
+
+        if(playerHand.contains(card))
+        {
+            return true;
+        }
+        else return false;
+
     }
 }
