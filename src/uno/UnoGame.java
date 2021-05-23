@@ -36,13 +36,6 @@ public class UnoGame
         validColor = card.getColor();
         validValue = card.getValue();
 
-//        if(CurrentCard.getColor() == UnoCard.Color.Special) {
-//            CurrentCard = Deck.drawCard();
-//        }
-//        if(CurrentCard.getValue() == UnoCard.Value.Skip) {
-//            CurrentCard = Deck.drawCard();
-//        }
-
         if(card.getValue() == UnoCard.Value.Wild) {
             gameLoop(game);
         }
@@ -81,35 +74,9 @@ public class UnoGame
         return new ImageIcon(validColor + "-" + validValue + ".jpg");
     }
 
-    public boolean isGameOver() {
-        for (UnoPlayer player : this.playersArray) {
-//            if(emptyHand(player)) {
-//                return true;
-//            }
-        }
-        return false;
-    }
+    public UnoPlayer getCurrentPlayer() { return this.playersArray[this.currentPlayer]; }
 
-    public UnoPlayer getCurrentPlayer() {
-        return this.playersArray[this.currentPlayer];
-    }
-
-    public ArrayList<UnoCard> getPlayerHand(String playerID) {
-        int index = Arrays.asList(playersArray).indexOf(playerID);
-        return playerHand.get(index);
-    }
-
-    public int getPlayerHandSize(String playerID) {
-        return getPlayerHand(playerID).size();
-    }
-
-    public boolean emptyHand(String playerID) {
-        return getPlayerHand(playerID).isEmpty();
-    }
-
-    public boolean cardValidation(UnoCard card) {
-        return card.getColor() == validColor || card.getValue() == validValue;
-    }
+    public boolean cardValidation(UnoCard card) { return card.getColor() == validColor || card.getValue() == validValue; }
 
     public void changePlayer()
     {
@@ -155,6 +122,8 @@ public class UnoGame
         playersArray[currentPlayer].giveCard(Deck.drawCard());
         playersArray[currentPlayer].giveCard(Deck.drawCard());
     }
+
+
 
     public boolean performSpecialAction(UnoCard playedCard)
     {
