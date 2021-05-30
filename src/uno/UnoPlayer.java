@@ -1,12 +1,41 @@
 package uno;
-import java.util.ArrayList;
 
-public class UnoPlayer {
-    ArrayList<UnoCard> playerHand = new ArrayList<UnoCard>();
+import java.util.ArrayList;
+import java.util.Objects;
+
+public class UnoPlayer
+{
+
+
+    ArrayList<UnoCard> playerHand = new ArrayList<>();
+    String playerName;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UnoPlayer unoPlayer = (UnoPlayer) o;
+        return Objects.equals(playerName, unoPlayer.playerName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerName);
+    }
+
+    public UnoPlayer(String name)
+    {
+        playerName = name;
+    }
+
+    public String getPlayerName()
+    {
+        return this.playerName;
+    }
 
     public void giveCard(UnoCard card) {
         playerHand.add(card);
-    };
+    }
 
     public boolean removeCard(UnoCard toRM)
     {

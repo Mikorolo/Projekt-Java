@@ -24,7 +24,7 @@ public class UnoGame
         this.gameDirection = true; //clockwise by default
         playersArray = new UnoPlayer[numOfPlayers];
         for (int i = 0 ; i < numOfPlayers ; i++) { //iterating through players array and giving them cards
-            for(int j = 0 ; i < 7 ; j++) { //each player gets 7 cards at the beginning
+            for(int j = 0 ; j < 7 ; j++) { //each player gets 7 cards at the beginning
                 playersArray[currentPlayer].giveCard(Deck.drawCard()); //give one card to current player
             }
         }
@@ -109,7 +109,7 @@ public class UnoGame
 
     public void performColorChange()
     {
-        CurrentCard.changeColor(playersArray[currentPlayer].pickColor());
+//        CurrentCard.changeColor(playersArray[currentPlayer].pickColor());
     }
 
     public void performWild()
@@ -183,7 +183,7 @@ public class UnoGame
         if(playedCard.getColor()!=this.CurrentCard.getColor() && playedCard.getValue()!=this.CurrentCard.getValue())
             {return false;}
 
-        playersArray[currentPlayer].removeCard();//WIP
+//        playersArray[currentPlayer].removeCard();//WIP
 
         CurrentCard = playedCard;
 
