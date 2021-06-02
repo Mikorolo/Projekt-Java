@@ -84,4 +84,9 @@ public class UnoPlayer
         else return false;
 
     }
+
+    public ArrayList<UnoCard> getHand()
+    {
+        return playerHand;
+    }
 }

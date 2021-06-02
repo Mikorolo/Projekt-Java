@@ -19,8 +19,8 @@ public class UnoDeck {
 
     public void fillDeck() {
         UnoCard newCard;
-        UnoCard.Value[] values = UnoCard.Value.values();
-        UnoCard.Color[] colors = UnoCard.Color.values();
+        Value[] values = Value.values();
+        Color[] colors = Color.values();
         int numOfCards = 0;
 
         for (int i = 1 ; i < values.length-2 ; i++)
@@ -34,14 +34,14 @@ public class UnoDeck {
 
         for(int i = 0;i < colors.length-1;i++)
         {
-            this.Deck[numOfCards++] = new UnoCard(colors[i],UnoCard.Value.getValue(0));
+            this.Deck[numOfCards++] = new UnoCard(colors[i],Value.getValue(0));
         }
 
         for(int i = 13; i < values.length; i++)
         {
             for (int j = 0; j<4; j++)
             {
-                this.Deck[numOfCards++] = new UnoCard(UnoCard.Color.getColor(4), values[i]);
+                this.Deck[numOfCards++] = new UnoCard(Color.getColor(4), values[i]);
             }
         }
     }

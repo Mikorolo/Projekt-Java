@@ -2,40 +2,39 @@ package UnoGUI;
 
 
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
+import uno.UnoCard;
 import uno.UnoGame;
-import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class UnoGameController
 {
     UnoGame game;
-    ArrayList<Image> assets = new ArrayList<>();
 
     @FXML
     HBox obrazki;
 
+    @FXML
+    HBox center;
+
     protected void setupGame(ArrayList<String> players) throws Exception
     {
         game = new UnoGame(players.size(), players);
-        this.loadAssets();
-        for(int i=0; i<10; i++)
-            obrazki.getChildren().add(new ImageView(assets.get(i)));
+        UnoCardButton.loadAssets();
+        generateHand(game.getCurrentPlayerHand());
+
     }
 
-    private void loadAssets() throws Exception
+    protected void generateHand(ArrayList<UnoCard> currentPlayerHand)
     {
-        FileInputStream input;
-
-        for (int i=0; i<10; i++)
+        Iterator<UnoCard> it = currentPlayerHand.iterator();
+        while (it.hasNext())
         {
-            input = new FileInputStream(("E:\\Projekt-Java\\assets\\Blue_" + i + ".png"));
-            assets.add(new Image(input));
+            obrazki.getChildren().add(new UnoCardButton(it.next()));
         }
     }
-
 
 }
