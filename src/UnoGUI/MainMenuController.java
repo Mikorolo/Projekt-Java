@@ -11,9 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-
-import java.awt.*;
-import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 
 public class MainMenuController
@@ -28,7 +27,7 @@ public class MainMenuController
     @FXML
     protected void handleHotSeatOnAction(ActionEvent event) throws Exception
     {
-        Parent root = FXMLLoader.load(getClass().getResource("UnoGameSetup.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("UnoGameSetup.fxml")));
         Stage window =(Stage)((Node)event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         window.setScene(scene);
@@ -36,8 +35,22 @@ public class MainMenuController
     }
 
     @FXML
-    protected void handleExit(ActionEvent event)
+    protected void handleExit()
     {
         Platform.exit();
+    }
+
+
+    @FXML
+    protected void handleHall(ActionEvent event)throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("UnoHallOfFame.fxml"));
+        Parent root = loader.load();
+        HallController ctrl = loader.getController();
+        ctrl.setup();
+        Stage window =(Stage)((Node)event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.show();
     }
 }

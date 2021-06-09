@@ -1,11 +1,14 @@
 package uno;
 
-import javax.swing.*;
+
+import javafx.scene.control.ChoiceDialog;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+
 
 public class UnoGame
 {
+    int cardCounter=0;
     UnoDeck Deck;
     UnoCard CurrentCard;
     private ArrayList<UnoPlayer> playersArray = new ArrayList<>();
@@ -15,10 +18,15 @@ public class UnoGame
     private Color validColor;
     private Value validValue;
 
+
     public UnoGame(int numOfPlayers, ArrayList<String> names)
     {
         this.Deck = new UnoDeck();
         CurrentCard = Deck.drawCard();
+        while(CurrentCard.getValueIndex()>Value.Nine.ordinal())
+            {
+                CurrentCard = Deck.drawCard();
+            }
         this.currentPlayer = 0;
         this.gameDirection = true; //clockwise by default
         for (int i = 0; i < numOfPlayers; i++)
@@ -30,70 +38,125 @@ public class UnoGame
         }
     }
 
-    public void gameLoop(UnoGame game) {
 
-        UnoCard card = Deck.drawCard();
-        validColor = card.getColor();
-        validValue = card.getValue();
-
-        if(card.getValue() == Value.Wild) {
-            gameLoop(game);
-        }
-
-        if(card.getValue() == Value.drawTwo || card.getValue() == Value.colorChange) {
-            gameLoop(game);
-        }
-
-        if(CurrentCard.getValue() == Value.Skip) {
-            System.out.println("Player was skipped");
-            if(gameDirection == false) {
-                currentPlayer = (currentPlayer + 1) % playersArray.size();
-            }
-            else if(gameDirection) {
-                currentPlayer = (currentPlayer - 1) % playersArray.size();
-            }
-        }
-
-        if (card.getValue() == Value.Reverse) {
-            if(CurrentCard.getValue() == Value.Reverse) {
-                this.gameDirection = !this.gameDirection;
-                System.out.println("Game direction was changed");
-                currentPlayer = playersArray.size() - 1;
-            }
-        }
-        Deck.drawCard();
+    public void drawCard()
+    {
+        UnoCard drawnCard;
+        do
+        {
+            drawnCard= Deck.drawCard();
+            playersArray.get(currentPlayer).giveCard(drawnCard);
+        }while(cardValidation(drawnCard)==false);
     }
+
+
+    public void updateValid()
+    {
+        validColor = CurrentCard.getColor();
+        validValue = CurrentCard.getValue();
+    }
+
+
+    public void playCard(UnoCard playedCard) throws Exception
+    {
+        if(playedCard.getValue().ordinal()<Value.Reverse.ordinal())
+        {
+            CurrentCard = playedCard;
+            playersArray.get(currentPlayer).removeCard(playedCard);
+        }
+        else if(playedCard.getValue() == Value.Reverse)
+        {
+            CurrentCard = playedCard;
+            playersArray.get(currentPlayer).removeCard(playedCard);
+            performReverse();
+        }
+        else if(playedCard.getValue() == Value.colorChange)
+        {
+            try {
+                playersArray.get(currentPlayer).removeCard(playedCard);
+                performColorChange();
+            }catch (CancelColorException x)
+            {
+                playersArray.get(currentPlayer).giveCard(new UnoCard(Color.Special,Value.colorChange));
+                throw new Exception();
+            }
+        }
+        else if(playedCard.getValue() == Value.Wild)
+        {
+            try {
+                playersArray.get(currentPlayer).removeCard(playedCard);
+                performWild();
+            }catch (CancelColorException x)
+            {
+                playersArray.get(currentPlayer).giveCard(new UnoCard(Color.Special,Value.Wild));
+                throw new Exception();
+            }
+        }
+        else if(playedCard.getValue() == Value.drawTwo)
+        {
+            CurrentCard = playedCard;
+            playersArray.get(currentPlayer).removeCard(playedCard);
+            performDrawTwo();
+        }
+        else
+        {
+            CurrentCard = playedCard;
+            performSkip();
+            playersArray.get(currentPlayer).removeCard(playedCard);
+        }
+    }
+
+
+    public ArrayList<UnoPlayer> getPlayersArray()
+    {
+        return playersArray;
+    }
+
+    public UnoCard getCurrentCard()
+    {
+        return this.CurrentCard;
+    }
+
+
+    public int getCurrentPlayerIndex()
+    {
+        return currentPlayer;
+    }
+
 
     //Getting top card
     public UnoCard getTop() {
         return new UnoCard(validColor, validValue);
     }
 
-    //Getting top card image
-    public ImageIcon getImage() {
-        return new ImageIcon(validColor + "-" + validValue + ".jpg");
-    }
 
     public UnoPlayer getCurrentPlayer() { return this.playersArray.get(currentPlayer); }
 
-    public boolean cardValidation(UnoCard card) { return card.getColor() == validColor || card.getValue() == validValue; }
+
+    public boolean cardValidation(UnoCard card)
+    {
+        return  card.getColor() == validColor ||
+                card.getValue() == validValue ||
+                card.getColor() == Color.Special;
+    }
+
 
     public void changePlayer()
     {
         if(gameDirection) currentPlayer++;
         else currentPlayer--;
 
-        if(currentPlayer>playersArray.size()) currentPlayer=0;
-        if(currentPlayer<0) currentPlayer=playersArray.size();
+        if(currentPlayer>(playersArray.size()-1)) currentPlayer=0;
+        if(currentPlayer<0) currentPlayer=(playersArray.size()-1);
     }
+
 
     public void performSkip()
     {
-
-        this.changePlayer();
-        playersArray.get(currentPlayer).searchCard(new UnoCard(Color.Special,Value.Skip));
-        this.changePlayer();
+        changePlayer();
+        changePlayer();
     }
+
 
     public void performDrawTwo()
     {
@@ -102,21 +165,27 @@ public class UnoGame
         playersArray.get(currentPlayer).giveCard(Deck.drawCard());
     }
 
+
     public void performReverse()
     {
         gameDirection=!gameDirection;
+        changePlayer();
     }
 
-    public void performColorChange()
+
+    public void performColorChange() throws CancelColorException
     {
-//        CurrentCard.changeColor(playersArray[currentPlayer].pickColor());
+            CurrentCard.changeColor(getColorChoice());
     }
 
-    public void performWild()
+
+    public void performWild() throws CancelColorException
     {
+
         this.performColorChange();
 
-        currentPlayer++;
+        this.changePlayer();
+
         playersArray.get(currentPlayer).giveCard(Deck.drawCard());
         playersArray.get(currentPlayer).giveCard(Deck.drawCard());
         playersArray.get(currentPlayer).giveCard(Deck.drawCard());
@@ -124,70 +193,44 @@ public class UnoGame
     }
 
 
+    public Color getColorChoice() throws CancelColorException {
+        ChoiceDialog<String> dialog;
+        List<String> list = new ArrayList<>();
 
-    public boolean performSpecialAction(UnoCard playedCard)
-    {
-        if(playedCard.getValue() == Value.drawTwo || playedCard.getValue() == Value.Reverse || playedCard.getValue() == Value.Skip)
+        list.add("Blue");
+        list.add("Green");
+        list.add("Red");
+        list.add("Yellow");
+
+        dialog = new ChoiceDialog<>("Blue", list);
+        dialog.setTitle("Choose color");
+        dialog.setHeaderText("Choose color");
+        dialog.setContentText("Choose color:");
+
+        dialog.showAndWait();
+
+        switch (dialog.getSelectedItem())
         {
-            if(playedCard.getColor() != this.CurrentCard.getColor())
-                return false;
+            case "Blue":
+                return Color.Blue;
+            case "Green":
+                return Color.Green;
+            case "Red":
+                return Color.Red;
+            case "Yellow":
+                return Color.Yellow;
         }
-
-        if(playedCard.getValue()==Value.Skip)
-        {
-            CurrentCard=playedCard;
-            this.performSkip();
-            return true;
-        }
-
-        if(playedCard.getValue()==Value.drawTwo)
-        {
-            CurrentCard=playedCard;
-            this.performDrawTwo();
-            return true;
-        }
-
-        if(playedCard.getValue()==Value.Reverse)
-        {
-            CurrentCard=playedCard;
-            this.performReverse();
-            return true;
-        }
-
-        if(playedCard.getValue()==Value.colorChange)
-        {
-            CurrentCard=playedCard;
-            this.performColorChange();
-            return true;
-        }
-
-        if(playedCard.getValue()==Value.Wild)
-        {
-            CurrentCard=playedCard;
-            this.performWild();
-            return true;
-        }
-
-        return true;
+        throw new CancelColorException();
     }
 
-    public boolean performAction(UnoCard playedCard)
+    public void incrementCounter()
     {
-        if(playedCard.getColor() == Color.Special) {
-            if(!performSpecialAction(playedCard))
-                {return false;}
-            else return true;
+        cardCounter++;
+    }
 
-        }
-
-        if(playedCard.getColor()!=this.CurrentCard.getColor() && playedCard.getValue()!=this.CurrentCard.getValue())
-            {return false;}
-
-//        playersArray.get(currentPlayer).removeCard();//WIP
-
-        CurrentCard = playedCard;
-
-        return true;
+    public int getCounter()
+    {
+        return cardCounter;
     }
 
     public ArrayList<UnoCard> getCurrentPlayerHand()
@@ -195,7 +238,4 @@ public class UnoGame
         return playersArray.get(currentPlayer).getHand();
     }
 
-    public void gameState() {
-
-    }
 }

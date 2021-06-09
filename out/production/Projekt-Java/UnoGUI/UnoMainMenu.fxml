@@ -58,8 +58,7 @@
             </HBox>
             <HBox alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" text="Host" />
-                  <Button mnemonicParsing="false" text="Join" />
+                  <Button mnemonicParsing="false" onAction="#handleHall" text="Hall of Fame" />
                </children>
             </HBox>
             <HBox alignment="CENTER">

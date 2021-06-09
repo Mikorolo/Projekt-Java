@@ -16,6 +16,13 @@ public class UnoCardButton extends Button
     static Image[][] cardImages = new Image[5][15];
     ImageView cardGraphic;
 
+
+    public UnoCard getCard()
+    {
+        return thisButt;
+    }
+
+
     public UnoCardButton(UnoCard card)
     {
         super();
@@ -24,10 +31,6 @@ public class UnoCardButton extends Button
         this.setGraphic(cardGraphic);
     }
 
-    public UnoCard getThisButt()
-    {
-        return thisButt;
-    }
 
     public static void loadAssets()
     {
