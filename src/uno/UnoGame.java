@@ -14,7 +14,7 @@ public class UnoGame
     private ArrayList<UnoPlayer> playersArray = new ArrayList<>();
     private int currentPlayer;
     boolean gameDirection; //clockwise by default
-
+    boolean madeMove=true;
     private Color validColor;
     private Value validValue;
 
@@ -49,6 +49,10 @@ public class UnoGame
         }while(cardValidation(drawnCard)==false);
     }
 
+    public boolean getMadeMove()
+    {
+        return madeMove;
+    }
 
     public void updateValid()
     {
@@ -59,6 +63,7 @@ public class UnoGame
 
     public void playCard(UnoCard playedCard) throws Exception
     {
+        madeMove=false;
         if(playedCard.getValue().ordinal()<Value.Reverse.ordinal())
         {
             CurrentCard = playedCard;
@@ -143,6 +148,7 @@ public class UnoGame
 
     public void changePlayer()
     {
+        madeMove = true;
         if(gameDirection) currentPlayer++;
         else currentPlayer--;
 
@@ -225,7 +231,7 @@ public class UnoGame
 
     public void incrementCounter()
     {
-        cardCounter++;
+        cardCounter = cardCounter++;
     }
 
     public int getCounter()

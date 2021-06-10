@@ -28,12 +28,6 @@ public class Server
             scores.add(new UserScore(buff[0],Integer.parseInt(buff[1])));
         }
 
-        Iterator<UserScore> it = scores.iterator();
-        while (it.hasNext())
-        {
-            System.out.println(it.next().getScore());
-        }
-
         loader.close();
     }
 
@@ -41,7 +35,8 @@ public class Server
     public void saveData(UserScore savedData) throws IOException
     {
         BufferedWriter output = new BufferedWriter(new FileWriter(ranking,true));
-        output.append(savedData.getScore());
+        output.append(savedData.getCSV());
+        output.close();
     }
 
 
@@ -58,7 +53,7 @@ public class Server
     public void action() throws Exception
     {
         UserScore inputLine;
-        inputLine = (UserScore) in.readObject();
+        inputLine = (UserScore)in.readObject();
 
         if("Send".equals(inputLine.getUserName()))
         {
@@ -68,6 +63,7 @@ public class Server
         else
         {
             System.out.println("appending");
+            System.out.println(inputLine.getScore());
             scores.add(inputLine);
             saveData(inputLine);
         }

@@ -22,7 +22,6 @@ public class UnoGameController
 {
     UnoGame game;
     int currentPlayerIndex;
-    boolean madeMove = true;
 
 
     @FXML
@@ -62,7 +61,7 @@ public class UnoGameController
         Iterator<UnoPlayer> itName = game.getPlayersArray().iterator();
 
         iWinButton.setDisable(!(game.getCurrentPlayerHand().size()==0));
-        passTurn.setDisable(madeMove);
+        passTurn.setDisable(game.getMadeMove());
         obrazki.getChildren().clear();
         center.getChildren().clear();
         graczeInfo.getChildren().clear();
@@ -84,6 +83,7 @@ public class UnoGameController
 
     protected void playCard(ActionEvent curEvent)
     {
+        game.incrementCounter();
         UnoCard playedCard = ((UnoCardButton)curEvent.getSource()).getCard();
         game.updateValid();
 
@@ -94,7 +94,6 @@ public class UnoGameController
         else try{game.playCard(playedCard);}
         catch (Exception x){refreshScreen();}
 
-        madeMove=false;
         refreshScreen();
     }
 
@@ -109,7 +108,6 @@ public class UnoGameController
     @FXML
     protected void handlePassTurn()
     {
-        madeMove=true;
         game.changePlayer();
         refreshScreen();
     }

@@ -2,3 +2,4 @@ Wiktor;20
 Kacper;84
 Mikolaj;4
 Karol;34
+b;0
